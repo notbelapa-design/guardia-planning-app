@@ -59,6 +59,8 @@ const calendarContainer = document.getElementById('calendar-container');
 // Additional elements for status messages and back navigation
 const statusMessageEl = document.getElementById('status-message');
 const backBtn = document.getElementById('back-btn');
+// Global home button used to navigate back to the login/home view from any section
+const homeBtn = document.getElementById('home-btn');
 
 /**
  * Persist the current application state to localStorage. This includes
@@ -582,6 +584,39 @@ function performReset() {
   showStatus('Guardia setup has been reset');
   alert('All guardias and assignments have been cleared.');
 }
+
+/**
+ * Navigate back to the home/login view without discarding any data. If the
+ * admin setup has not yet been completed (i.e., the admin section is
+ * currently visible), this will simply keep the admin view visible. If
+ * setup has already been finished, the login and calendar sections are
+ * shown and the planning section is hidden. This does not clear any
+ * selections or shift data; it only resets the current user to null.
+ */
+function goHome() {
+  // Clear any active user
+  currentUser = null;
+  currentUserSpan.textContent = '';
+  userSelect.value = '';
+  // Determine whether setup is complete based on admin section visibility
+  if (adminSection.style.display === 'none') {
+    // Setup finished: hide admin and planning, show login and calendar
+    adminSection.style.display = 'none';
+    loginSection.style.display = '';
+    planningSection.style.display = 'none';
+    calendarSection.style.display = '';
+  } else {
+    // Setup not finished: show admin, hide other sections
+    adminSection.style.display = '';
+    loginSection.style.display = 'none';
+    planningSection.style.display = 'none';
+    calendarSection.style.display = 'none';
+  }
+  // Refresh UI
+  renderTable();
+  updateCalendar();
+  showStatus('');
+}
 if (resetBtn) {
   resetBtn.addEventListener('click', performReset);
 }
@@ -654,6 +689,11 @@ if (backBtn) {
     renderTable();
     showStatus('');
   });
+}
+
+// Navigate back to the home/login view from any section
+if (homeBtn) {
+  homeBtn.addEventListener('click', goHome);
 }
 
 // Load any previously saved state from localStorage so users can resume where they left off.
