@@ -115,6 +115,14 @@ button {
   font-weight: bold;
 }
 
+/* Status message displayed when selections are saved or conflicts resolved */
+.status {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: #0070f3;
+  font-style: italic;
+}
+
 /* Admin form styling */
 .admin-form {
   display: flex;

@@ -51,6 +51,91 @@ const resolveBtn = document.getElementById('resolve-btn');
 const calendarSection = document.getElementById('calendar');
 const calendarContainer = document.getElementById('calendar-container');
 
+// Additional elements for status messages and back navigation
+const statusMessageEl = document.getElementById('status-message');
+const backBtn = document.getElementById('back-btn');
+
+/**
+ * Persist the current application state to localStorage. This includes
+ * the list of shifts, user picks, which users have finished and
+ * whether the admin setup has been completed. Storing this state
+ * allows users to refresh the page or leave and come back without
+ * losing their selections. Note that this only persists on a single
+ * browser/device; it is not shared across multiple users.
+ */
+function saveState() {
+  try {
+    const data = {
+      shifts: shifts,
+      userPicks: userPicks,
+      finishedUsers: finishedUsers,
+      setupComplete: adminSection.style.display === 'none'
+    };
+    localStorage.setItem('guardiaPlanningState', JSON.stringify(data));
+  } catch (e) {
+    // Fail silently if storage is unavailable
+    console.error('Could not save state', e);
+  }
+}
+
+/**
+ * Load any persisted state from localStorage. If found, this will
+ * repopulate the list of shifts, user picks and completed users. It
+ * also restores whether the admin setup phase was completed so the
+ * correct sections are shown. After loading, the admin list, table
+ * and calendar are rendered.
+ */
+function loadState() {
+  try {
+    const raw = localStorage.getItem('guardiaPlanningState');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.shifts && Array.isArray(data.shifts)) {
+      // clear and repopulate shifts array
+      shifts.splice(0, shifts.length, ...data.shifts);
+    }
+    if (data.userPicks) {
+      Object.keys(userPicks).forEach(u => {
+        userPicks[u] = Array.isArray(data.userPicks[u]) ? [...data.userPicks[u]] : [];
+      });
+    }
+    if (data.finishedUsers) {
+      Object.keys(data.finishedUsers).forEach(u => {
+        finishedUsers[u] = data.finishedUsers[u];
+      });
+    }
+    if (data.setupComplete) {
+      adminSection.style.display = 'none';
+      loginSection.style.display = '';
+      calendarSection.style.display = '';
+    }
+    // Re-render UI with loaded data
+    renderAdminList();
+    renderTable();
+    updateCalendar();
+  } catch (e) {
+    console.error('Could not load state', e);
+  }
+}
+
+/**
+ * Display a transient status message. The message will fade away
+ * automatically after a short period. Intended to inform users
+ * that their selections have been saved or conflicts resolved.
+ * @param {string} msg Message to display
+ */
+function showStatus(msg) {
+  if (!statusMessageEl) return;
+  statusMessageEl.textContent = msg;
+  if (msg) {
+    setTimeout(() => {
+      if (statusMessageEl.textContent === msg) {
+        statusMessageEl.textContent = '';
+      }
+    }, 3000);
+  }
+}
+
 /**
  * Utility: Format a date string (YYYY-MM-DD) into a human-friendly
  * representation such as "1 Sep 2025". Avoids timezone issues.
@@ -161,6 +246,9 @@ function addNewShift() {
   shifts.push({ id, date, type, assigned: [] });
   newDateInput.value = '';
   renderAdminList();
+  // Persist newly added shift
+  saveState();
+  showStatus('Guardia added');
 }
 
 /**
@@ -178,6 +266,8 @@ function finishSetup() {
   calendarSection.style.display = '';
   renderTable();
   updateCalendar();
+  saveState();
+  showStatus('Setup complete');
   alert('Setup complete! Residents can now choose their guardias.');
 }
 
@@ -268,6 +358,9 @@ function handleSelect(shiftId) {
     userPicks[currentUser].push(shiftId);
   }
   renderTable();
+  // Persist changes after each selection/deselection
+  saveState();
+  showStatus('Selections saved');
 }
 
 /**
@@ -278,6 +371,8 @@ function finishSelection() {
   if (!currentUser) return;
   finishedUsers[currentUser] = true;
   renderTable();
+  saveState();
+  showStatus(`${currentUser} has finished selecting guardias`);
   alert(`${currentUser} has finished selecting guardias.`);
 }
 
@@ -326,6 +421,8 @@ function resolveConflicts() {
     });
   });
   renderTable();
+  saveState();
+  showStatus('Conflicts have been resolved');
   alert('Conflicts have been resolved fairly based on Monday/Friday assignments.');
 }
 
@@ -450,7 +547,25 @@ startBtn.addEventListener('click', () => {
 finishBtn.addEventListener('click', finishSelection);
 resolveBtn.addEventListener('click', resolveConflicts);
 
-// Initially, only the admin setup section is visible. Login and calendar
-// sections are hidden by default (via inline styles in HTML). Render
-// the admin list to show placeholder text.
-renderAdminList();
+// Navigate back to the login screen without losing state
+if (backBtn) {
+  backBtn.addEventListener('click', () => {
+    // Reset current user and show login
+    currentUser = null;
+    planningSection.style.display = 'none';
+    loginSection.style.display = '';
+    // Re-render table to disable checkboxes
+    renderTable();
+    showStatus('');
+  });
+}
+
+// Load any previously saved state from localStorage so users can resume where they left off.
+loadState();
+
+// Initially, only the admin setup section is visible until setup is complete. Login and calendar
+// sections are hidden by default (via inline styles in HTML). If no saved state is found,
+// render the admin list to show placeholder text.
+if (shifts.length === 0) {
+  renderAdminList();
+}

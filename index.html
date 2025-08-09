@@ -64,6 +64,9 @@
     <p class="instructions">Select up to 4 guardias. Click on the checkboxes to
       assign yourself to a guardia slot. Conflicts will be highlighted in red.</p>
 
+    <!-- Status message shown after saving selections or resolving conflicts -->
+    <p id="status-message" class="status"></p>
+
     <table id="shift-table">
       <thead>
         <tr>
@@ -78,8 +81,9 @@
     <p id="remaining-shifts" class="remaining"></p>
     <!-- Display Monday/Friday tally for the current user -->
     <p id="mon-fri-count" class="remaining"></p>
-
     <div class="button-row">
+      <!-- Allow users to switch back to the login screen without losing their selections -->
+      <button id="back-btn" class="action-btn secondary">Switch user</button>
       <button id="finish-btn" class="action-btn">Finish selection</button>
       <button id="resolve-btn" class="action-btn secondary">Resolve conflicts</button>
     </div>

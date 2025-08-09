@@ -34,6 +34,15 @@ automatically.
   Mondays and Fridays and displays every guardia along with its assigned
   resident(s). This provides a clear overview of the schedule.
 
+- **Persistent state:** The app saves the list of guardias, each resident’s
+  selections, and which users have finished into the browser’s
+  `localStorage`. This means you can refresh the page or return later and
+  your work will still be there (on that same device).
+- **Switch user/back button:** While planning, residents can return to
+  the login screen without losing their selections via the **Switch user**
+  button. This allows multiple residents to plan one after another on the
+  same device.
+
 ## Running Locally
 
 No build step is required—this is a static site. To run the app locally:
