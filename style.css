@@ -114,3 +114,90 @@ button {
   margin-top: 0.5rem;
   font-weight: bold;
 }
+
+/* Admin form styling */
+.admin-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.guardia-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.guardia-list li {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+}
+
+/* Calendar styling */
+#calendar-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.calendar-month {
+  margin-bottom: 2rem;
+}
+
+.calendar-month h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #e2e8f0;
+  padding: 0.4rem;
+  vertical-align: top;
+  min-width: 100px;
+  height: 90px;
+  font-size: 0.75rem;
+}
+
+.calendar-table th {
+  background-color: #f1f5f9;
+  text-align: center;
+  font-weight: bold;
+}
+
+.calendar-cell-date {
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+/* Highlight Monday and Friday cells */
+.mon-cell {
+  background-color: #fef8e7;
+}
+.fri-cell {
+  background-color: #fef8e7;
+}
+
+/* Style shift entries in calendar */
+.shift-entry {
+  display: block;
+  margin: 0.1rem 0;
+  padding: 0.1rem 0.2rem;
+  border-radius: 4px;
+}
+.shift-puerta {
+  background-color: #edf2ff;
+}
+.shift-trauma {
+  background-color: #ffeef8;
+}

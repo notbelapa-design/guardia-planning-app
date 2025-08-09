@@ -10,6 +10,32 @@
   <h1>Guardia Planning App</h1>
 
   <!--
+    Admin setup section: Before any residents pick their guardias, an
+    administrator can populate the list of available guardia shifts.
+    The admin can enter a date (as an ISO date) and select whether
+    the guardia is "Puerta" or "Traumato". Added shifts appear in
+    a list. When the admin is done, they can click Finish Setup
+    to lock the shift list and allow residents to begin planning.
+  -->
+  <section id="admin-setup" class="card">
+    <h2>Admin: Setup Guardias</h2>
+    <p class="instructions">Add the available guardias for the upcoming months. Once you finish,
+      residents will be able to choose their guardias.</p>
+    <div class="admin-form">
+      <label for="new-date">Date:</label>
+      <input type="date" id="new-date" />
+      <label for="new-type">Type:</label>
+      <select id="new-type">
+        <option value="Puerta">Puerta</option>
+        <option value="Traumato">Traumato</option>
+      </select>
+      <button id="add-shift-btn" class="action-btn">Add guardia</button>
+    </div>
+    <ul id="guardia-list" class="guardia-list"></ul>
+    <button id="admin-finish-btn" class="action-btn secondary">Finish setup</button>
+  </section>
+
+  <!--
     Login section: Allows each resident to identify themselves before making
     selections. Once a user clicks "Start planning", the planning UI will
     appear and the login box will be hidden. A user can only make up to
@@ -50,11 +76,26 @@
       <tbody id="shift-table-body"></tbody>
     </table>
     <p id="remaining-shifts" class="remaining"></p>
+    <!-- Display Monday/Friday tally for the current user -->
+    <p id="mon-fri-count" class="remaining"></p>
 
     <div class="button-row">
       <button id="finish-btn" class="action-btn">Finish selection</button>
       <button id="resolve-btn" class="action-btn secondary">Resolve conflicts</button>
     </div>
+  </section>
+
+  <!--
+    Calendar section: Displays a monthly calendar view of all guardias
+    and their current assignments. Each date cell shows the shifts on
+    that day along with the assigned resident(s) or a placeholder if
+    unassigned. Mondays and Fridays are highlighted to draw
+    attention to those notoriously difficult days.
+  -->
+  <section id="calendar" class="card" style="display:none;">
+    <h2>Calendar View</h2>
+    <p class="instructions">Overview of guardias by date. Mondays and Fridays are highlighted.</p>
+    <div id="calendar-container"></div>
   </section>
 
   <script src="script.js"></script>
