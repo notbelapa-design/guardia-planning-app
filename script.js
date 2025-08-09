@@ -48,6 +48,7 @@ const monFriCountEl = document.getElementById('mon-fri-count');
 const finishBtn = document.getElementById('finish-btn');
 const resolveBtn = document.getElementById('resolve-btn');
 const resetBtn = document.getElementById('reset-btn');
+const resetAllBtn = document.getElementById('reset-all-btn');
 // Newly added buttons
 const unlockBtn = document.getElementById('unlock-btn');
 const randomBtn = document.getElementById('random-btn');
@@ -552,36 +553,40 @@ finishBtn.addEventListener('click', finishSelection);
 resolveBtn.addEventListener('click', resolveConflicts);
 
 // Reset the entire setup, clearing all guardias, assignments and picks
-if (resetBtn) {
-  resetBtn.addEventListener('click', () => {
-    const confirmed = confirm('Are you sure you want to reset all guardias and assignments? This cannot be undone.');
-    if (!confirmed) return;
-    // Clear shifts
-    shifts.splice(0, shifts.length);
-    // Reset user picks and finished users
-    users.forEach(u => {
-      userPicks[u] = [];
-      delete finishedUsers[u];
-    });
-    // Remove persisted state
-    try {
-      localStorage.removeItem('guardiaPlanningState');
-    } catch (e) {
-      console.error('Could not clear saved state', e);
-    }
-    // Reset UI to initial admin setup
-    currentUser = null;
-    adminSection.style.display = '';
-    loginSection.style.display = 'none';
-    planningSection.style.display = 'none';
-    calendarSection.style.display = 'none';
-    // Re-render admin list and table
-    renderAdminList();
-    renderTable();
-    updateCalendar();
-    showStatus('Guardia setup has been reset');
-    alert('All guardias and assignments have been cleared.');
+function performReset() {
+  const confirmed = confirm('Are you sure you want to reset all guardias and assignments? This cannot be undone.');
+  if (!confirmed) return;
+  // Clear shifts
+  shifts.splice(0, shifts.length);
+  // Reset user picks and finished users
+  users.forEach(u => {
+    userPicks[u] = [];
+    delete finishedUsers[u];
   });
+  // Remove persisted state
+  try {
+    localStorage.removeItem('guardiaPlanningState');
+  } catch (e) {
+    console.error('Could not clear saved state', e);
+  }
+  // Reset UI to initial admin setup
+  currentUser = null;
+  adminSection.style.display = '';
+  loginSection.style.display = 'none';
+  planningSection.style.display = 'none';
+  calendarSection.style.display = 'none';
+  // Re-render admin list and table
+  renderAdminList();
+  renderTable();
+  updateCalendar();
+  showStatus('Guardia setup has been reset');
+  alert('All guardias and assignments have been cleared.');
+}
+if (resetBtn) {
+  resetBtn.addEventListener('click', performReset);
+}
+if (typeof resetAllBtn !== 'undefined' && resetAllBtn) {
+  resetAllBtn.addEventListener('click', performReset);
 }
 
 // Allow a resident to unlock their selections and modify them again
