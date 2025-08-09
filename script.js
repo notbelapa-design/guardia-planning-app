@@ -47,6 +47,9 @@ const remainingShiftsEl = document.getElementById('remaining-shifts');
 const monFriCountEl = document.getElementById('mon-fri-count');
 const finishBtn = document.getElementById('finish-btn');
 const resolveBtn = document.getElementById('resolve-btn');
+// Newly added buttons
+const unlockBtn = document.getElementById('unlock-btn');
+const randomBtn = document.getElementById('random-btn');
 
 const calendarSection = document.getElementById('calendar');
 const calendarContainer = document.getElementById('calendar-container');
@@ -546,6 +549,60 @@ startBtn.addEventListener('click', () => {
 
 finishBtn.addEventListener('click', finishSelection);
 resolveBtn.addEventListener('click', resolveConflicts);
+
+// Allow a resident to unlock their selections and modify them again
+if (unlockBtn) {
+  unlockBtn.addEventListener('click', () => {
+    if (!currentUser) {
+      alert('Please select your name first.');
+      return;
+    }
+    if (!finishedUsers[currentUser]) {
+      alert('You have not finished your selections yet.');
+      return;
+    }
+    // Unlock this user
+    finishedUsers[currentUser] = false;
+    renderTable();
+    saveState();
+    showStatus(`${currentUser}'s selections are unlocked`);
+    alert(`${currentUser} can now edit their selections again.`);
+  });
+}
+
+// Randomly assign all unassigned guardias to residents fairly
+if (randomBtn) {
+  randomBtn.addEventListener('click', () => {
+    if (shifts.length === 0) {
+      alert('There are no guardias to assign.');
+      return;
+    }
+    // Build a count of assignments per user
+    const counts = {};
+    users.forEach(u => { counts[u] = userPicks[u].length; });
+    // For each shift, assign if unassigned
+    shifts.forEach(shift => {
+      if (shift.assigned.length === 0) {
+        // Determine the minimum assignment count
+        const min = Math.min(...users.map(u => counts[u]));
+        // Filter users with minimum assignments
+        const candidates = users.filter(u => counts[u] === min);
+        // Pick random candidate
+        const winner = candidates[Math.floor(Math.random() * candidates.length)];
+        shift.assigned = [winner];
+        userPicks[winner].push(shift.id);
+        counts[winner]++;
+      }
+    });
+    // Optionally mark all users as finished if everything is assigned
+    users.forEach(u => { finishedUsers[u] = true; });
+    renderTable();
+    saveState();
+    updateCalendar();
+    showStatus('All unassigned guardias have been randomly assigned');
+    alert('Random assignment complete. All guardias have been allocated.');
+  });
+}
 
 // Navigate back to the login screen without losing state
 if (backBtn) {
