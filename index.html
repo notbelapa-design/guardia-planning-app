@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guardia Planning App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Guardia Planning App</h1>
+
+  <!--
+    Login section: Allows each resident to identify themselves before making
+    selections. Once a user clicks "Start planning", the planning UI will
+    appear and the login box will be hidden. A user can only make up to
+    four selections (one for each required guardia) before finishing.
+  -->
+  <section id="login" class="card">
+    <label for="user-select">Select your name:</label>
+    <select id="user-select">
+      <option value="">--Select--</option>
+      <option value="Resident 1">Resident 1</option>
+      <option value="Resident 2">Resident 2</option>
+      <option value="Resident 3">Resident 3</option>
+      <option value="Resident 4">Resident 4</option>
+    </select>
+    <button id="start-btn">Start planning</button>
+  </section>
+
+  <!--
+    Planning section: Contains the interactive table of guardia slots and
+    controls for finishing the current user's selection or resolving
+    conflicts across all users. This section is hidden until a user
+    starts planning.
+  -->
+  <section id="planning" class="card" style="display:none;">
+    <h2>Planning for <span id="current-user"></span></h2>
+    <p class="instructions">Select up to 4 guardias. Click on the checkboxes to
+      assign yourself to a guardia slot. Conflicts will be highlighted in red.</p>
+
+    <table id="shift-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th class="assigned-col">Assigned resident(s)</th>
+          <th>Select</th>
+        </tr>
+      </thead>
+      <tbody id="shift-table-body"></tbody>
+    </table>
+    <p id="remaining-shifts" class="remaining"></p>
+
+    <div class="button-row">
+      <button id="finish-btn" class="action-btn">Finish selection</button>
+      <button id="resolve-btn" class="action-btn secondary">Resolve conflicts</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
