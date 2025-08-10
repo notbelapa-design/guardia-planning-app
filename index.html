@@ -1,101 +1,44 @@
+<!--
+  index.html – Landing page for the Guardia Planning App
+
+  This landing page introduces administrators to the guardia scheduling system. It outlines
+  the steps they need to take (adding guardias, inviting residents, resolving conflicts,
+  monitoring fairness) and provides a friendly entry point to the main application.
+  Clicking the call‑to‑action will navigate to `home.html`, where the full app lives.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Guardia Planning App</title>
+  <title>Welcome – Guardia Planning App</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="site-header">
     <h1>Guardia Planning App</h1>
-    <button id="home-btn" class="btn btn-secondary">Home</button>
   </header>
 
-  <!-- ADMIN SETUP -->
-  <section id="admin-setup" class="card">
-    <h2>Admin: Setup Guardias</h2>
-    <p class="muted">Add the available guardias for the upcoming months. When done, click “Finish setup”.</p>
+  <section class="card">
+    <h2>Welcome!</h2>
+    <p class="muted">This app helps you fairly assign on‑call guardias among your residents.</p>
 
-    <div class="admin-form">
-      <label for="new-date">Date</label>
-      <input type="date" id="new-date" />
-      <label for="new-type">Type</label>
-      <select id="new-type">
-        <option value="Puerta">Puerta</option>
-        <option value="Observa">Observa</option>
-        <option value="Traumato">Traumato</option>
-      </select>
-      <button id="add-guardia-btn" class="btn btn-primary">Add guardia</button>
+    <h3>How it works</h3>
+    <ol>
+      <li><strong>Add guardias</strong> &mdash; Define each shift by selecting a date and its type (<em>Puerta</em>, <em>Observa</em> or <em>Traumato</em>).</li>
+      <li><strong>Invite your residents</strong> &mdash; Four residents will each pick up to 4 guardias from the available slots.</li>
+      <li><strong>Watch out for Mondays and Fridays</strong> &mdash; The app highlights these tough days and keeps a tally of how many each resident takes.</li>
+      <li><strong>Resolve or randomize conflicts</strong> &mdash; If multiple residents select the same guardia, use the built‑in fairness logic to resolve it or assign any remaining shifts at random.</li>
+    </ol>
+
+    <p>Ready to get started? Click below to begin the setup.</p>
+    <div style="margin-top: 16px;">
+      <a href="home.html" class="btn btn-primary">Start scheduling (Home)</a>
     </div>
-
-    <ul id="guardia-list" class="guardia-list"></ul>
-
-    <div class="row gap">
-      <button id="admin-finish-btn" class="btn btn-primary">Finish setup</button>
-      <button id="reset-setup-btn" class="btn btn-secondary">Reset setup</button>
-    </div>
-  </section>
-
-  <!-- LOGIN / START -->
-  <section id="login" class="card">
-    <div class="row">
-      <label for="user-select" class="label-inline">Select your name</label>
-      <select id="user-select">
-        <option value="">--Select--</option>
-      </select>
-      <button id="start-btn" class="btn btn-primary">Start planning</button>
-      <button id="reset-app-btn" class="btn btn-secondary">Reset app</button>
-    </div>
-  </section>
-
-  <!-- PLANNING -->
-  <section id="planning" class="card" hidden>
-    <h2>Planning for <span id="current-user"></span></h2>
-    <p class="muted">Select up to <span id="max-per-user"></span> guardias. Conflicts (multiple residents on the same slot) highlight in red.</p>
-    <p id="status" class="status" hidden></p>
-
-    <div class="row stats">
-      <strong id="remaining"></strong>
-      <span id="monfri"></span>
-    </div>
-
-    <!-- Monday/Friday tally for all residents -->
-    <ul id="tally-list" class="tally-list"></ul>
-
-    <table class="table" id="shifts-table">
-      <thead>
-      <tr>
-        <th>Date</th>
-        <th>Type</th>
-        <th>Assigned</th>
-        <th>Select</th>
-      </tr>
-      </thead>
-      <tbody id="shifts-tbody"></tbody>
-    </table>
-
-    <div class="row gap">
-      <button id="switch-btn" class="btn btn-secondary">Switch user</button>
-      <button id="finish-btn" class="btn btn-primary">Finish selection</button>
-      <button id="unlock-btn" class="btn btn-secondary">Unlock my selections</button>
-      <span class="spacer"></span>
-      <button id="resolve-btn" class="btn btn-secondary">Resolve conflicts</button>
-      <button id="random-btn" class="btn btn-secondary">Random assign remaining</button>
-    </div>
-  </section>
-
-  <!-- CALENDAR -->
-  <section id="calendar" class="card">
-    <h2>Calendar</h2>
-    <p class="muted">Mondays and Fridays are highlighted.</p>
-    <div id="calendar-grid" class="calendar"></div>
   </section>
 
   <footer class="site-footer">
-    <small>Local-only version (persists in this browser). For shared, multi-device use, we can plug in a tiny backend.</small>
+    <small>This is the landing page. The full scheduling interface is on the next page.</small>
   </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
