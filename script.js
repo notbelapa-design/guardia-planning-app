@@ -119,6 +119,22 @@
     return { total, monfri };
   }
 
+  /**
+   * Render the Monday/Friday tally for all residents.
+   * Lists each resident and how many of their selected guardias fall on a Monday or Friday.
+   */
+  function renderTally() {
+    const list = document.getElementById("tally-list");
+    if (!list) return;
+    list.innerHTML = "";
+    state.residents.forEach(res => {
+      const { monfri } = statsFor(res);
+      const li = document.createElement("li");
+      li.textContent = `${res}: ${monfri} on Mon/Fri`;
+      list.appendChild(li);
+    });
+  }
+
   // ---------- Admin rendering ----------
   function renderAdminList() {
     els.guardiaList.innerHTML = "";
@@ -227,6 +243,9 @@
     const remaining = state.config.slotsPerResident - stats.total;
     els.remaining.textContent = `${remaining} shifts remaining`;
     els.monfri.textContent = `Monday/Friday guardias: ${stats.monfri}`;
+
+    // Update the global tally list for all residents
+    renderTally();
 
     // Buttons
     els.finishBtn.disabled = meFinished;

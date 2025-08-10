@@ -112,6 +112,18 @@ input[type="date"]:focus, select:focus { outline: none; box-shadow: 0 0 0 4px va
 
 .stats { margin: 4px 0 8px; }
 
+/* List showing each resident's Monday/Friday tally */
+.tally-list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  color: var(--text);
+}
+.tally-list li {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
 .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
 .calendar .day {
   background: #fff; border: 1px solid var(--secondary); border-radius: 8px; padding: 8px; min-height: 84px;
