@@ -1,113 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Guardia Planning App</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Guardia Planning App
-    <!-- Global home button to navigate back to the login/home page -->
-    <button id="home-btn" class="action-btn secondary" style="float:right;font-size:0.8rem;">Home</button>
-  </h1>
+  <header class="site-header">
+    <h1>Guardia Planning App</h1>
+    <button id="home-btn" class="btn btn-secondary">Home</button>
+  </header>
 
-  <!--
-    Admin setup section: Before any residents pick their guardias, an
-    administrator can populate the list of available guardia shifts.
-    The admin can enter a date (as an ISO date) and select whether
-    the guardia is "Puerta" or "Traumato". Added shifts appear in
-    a list. When the admin is done, they can click Finish Setup
-    to lock the shift list and allow residents to begin planning.
-  -->
+  <!-- ADMIN SETUP -->
   <section id="admin-setup" class="card">
     <h2>Admin: Setup Guardias</h2>
-    <p class="instructions">Add the available guardias for the upcoming months. Once you finish,
-      residents will be able to choose their guardias.</p>
+    <p class="muted">Add the available guardias for the upcoming months. When done, click “Finish setup”.</p>
+
     <div class="admin-form">
-      <label for="new-date">Date:</label>
+      <label for="new-date">Date</label>
       <input type="date" id="new-date" />
-      <label for="new-type">Type:</label>
+      <label for="new-type">Type</label>
       <select id="new-type">
         <option value="Puerta">Puerta</option>
         <option value="Traumato">Traumato</option>
       </select>
-      <button id="add-shift-btn" class="action-btn">Add guardia</button>
+      <button id="add-guardia-btn" class="btn btn-primary">Add guardia</button>
     </div>
+
     <ul id="guardia-list" class="guardia-list"></ul>
-    <button id="admin-finish-btn" class="action-btn secondary">Finish setup</button>
-    <!-- Quick reset button to clear all guardias and assignments -->
-    <button id="reset-btn" class="action-btn secondary">Reset setup</button>
-  </section>
 
-  <!--
-    Login section: Allows each resident to identify themselves before making
-    selections. Once a user clicks "Start planning", the planning UI will
-    appear and the login box will be hidden. A user can only make up to
-    four selections (one for each required guardia) before finishing.
-  -->
-  <section id="login" class="card">
-    <label for="user-select">Select your name:</label>
-    <select id="user-select">
-      <option value="">--Select--</option>
-      <option value="Resident 1">Resident 1</option>
-      <option value="Resident 2">Resident 2</option>
-      <option value="Resident 3">Resident 3</option>
-      <option value="Resident 4">Resident 4</option>
-    </select>
-    <button id="start-btn">Start planning</button>
-    <!-- Provide a reset button here as well so the admin can clear everything even after setup -->
-    <button id="reset-all-btn" class="action-btn secondary" style="margin-left:0.5rem;">Reset app</button>
-  </section>
-
-  <!--
-    Planning section: Contains the interactive table of guardia slots and
-    controls for finishing the current user's selection or resolving
-    conflicts across all users. This section is hidden until a user
-    starts planning.
-  -->
-  <section id="planning" class="card" style="display:none;">
-    <h2>Planning for <span id="current-user"></span></h2>
-    <p class="instructions">Select up to 4 guardias. Click on the checkboxes to
-      assign yourself to a guardia slot. Conflicts will be highlighted in red.</p>
-
-    <!-- Status message shown after saving selections or resolving conflicts -->
-    <p id="status-message" class="status"></p>
-
-    <table id="shift-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Type</th>
-          <th class="assigned-col">Assigned resident(s)</th>
-          <th>Select</th>
-        </tr>
-      </thead>
-      <tbody id="shift-table-body"></tbody>
-    </table>
-    <p id="remaining-shifts" class="remaining"></p>
-    <!-- Display Monday/Friday tally for the current user -->
-    <p id="mon-fri-count" class="remaining"></p>
-    <div class="button-row">
-      <!-- Allow users to switch back to the login screen without losing their selections -->
-      <button id="back-btn" class="action-btn secondary">Switch user</button>
-      <button id="finish-btn" class="action-btn">Finish selection</button>
-      <button id="resolve-btn" class="action-btn secondary">Resolve conflicts</button>
+    <div class="row gap">
+      <button id="admin-finish-btn" class="btn btn-primary">Finish setup</button>
+      <button id="reset-setup-btn" class="btn btn-secondary">Reset setup</button>
     </div>
   </section>
 
-  <!--
-    Calendar section: Displays a monthly calendar view of all guardias
-    and their current assignments. Each date cell shows the shifts on
-    that day along with the assigned resident(s) or a placeholder if
-    unassigned. Mondays and Fridays are highlighted to draw
-    attention to those notoriously difficult days.
-  -->
-  <section id="calendar" class="card" style="display:none;">
-    <h2>Calendar View</h2>
-    <p class="instructions">Overview of guardias by date. Mondays and Fridays are highlighted.</p>
-    <div id="calendar-container"></div>
+  <!-- LOGIN / START -->
+  <section id="login" class="card">
+    <div class="row">
+      <label for="user-select" class="label-inline">Select your name</label>
+      <select id="user-select">
+        <option value="">--Select--</option>
+      </select>
+      <button id="start-btn" class="btn btn-primary">Start planning</button>
+      <button id="reset-app-btn" class="btn btn-secondary">Reset app</button>
+    </div>
   </section>
+
+  <!-- PLANNING -->
+  <section id="planning" class="card" hidden>
+    <h2>Planning for <span id="current-user"></span></h2>
+    <p class="muted">Select up to <span id="max-per-user"></span> guardias. Conflicts (multiple residents on the same slot) highlight in red.</p>
+    <p id="status" class="status" hidden></p>
+
+    <div class="row stats">
+      <strong id="remaining"></strong>
+      <span id="monfri"></span>
+    </div>
+
+    <table class="table" id="shifts-table">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Assigned</th>
+        <th>Select</th>
+      </tr>
+      </thead>
+      <tbody id="shifts-tbody"></tbody>
+    </table>
+
+    <div class="row gap">
+      <button id="switch-btn" class="btn btn-secondary">Switch user</button>
+      <button id="finish-btn" class="btn btn-primary">Finish selection</button>
+      <button id="unlock-btn" class="btn btn-secondary">Unlock my selections</button>
+      <span class="spacer"></span>
+      <button id="resolve-btn" class="btn btn-secondary">Resolve conflicts</button>
+      <button id="random-btn" class="btn btn-secondary">Random assign remaining</button>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section id="calendar" class="card">
+    <h2>Calendar</h2>
+    <p class="muted">Mondays and Fridays are highlighted.</p>
+    <div id="calendar-grid" class="calendar"></div>
+  </section>
+
+  <footer class="site-footer">
+    <small>Local-only version (persists in this browser). For shared, multi-device use, we can plug in a tiny backend.</small>
+  </footer>
 
   <script src="script.js"></script>
 </body>

@@ -1,211 +1,86 @@
-/*
- * Basic styling for the guardia planning application. The goal is to
- * provide a clean, legible interface with minimal embellishments. The
- * layout centers content on the page and uses tables for the shift
- * display. Conflict rows are highlighted in a subtle red tint.
- */
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f6f7fb;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+:root{
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --text: #1f2937;
+  --primary: #2563eb;
+  --primary-600: #1d4ed8;
+  --secondary: #e5e7eb;
+  --danger: #fee2e2;
+  --danger-border: #fca5a5;
+  --ring: rgba(37, 99, 235, .25);
 }
 
-h1 {
-  margin: 1rem 0 0.5rem 0;
-  font-size: 1.8rem;
-}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: var(--text); background: var(--bg); }
+
+.site-header, .site-footer { width: 100%; max-width: 1024px; margin: 24px auto 0; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; }
+.site-footer { margin-top: 12px; margin-bottom: 24px; }
+
+h1 { font-size: 28px; margin: 0; }
+h2 { font-size: 20px; margin: 0 0 8px; }
 
 .card {
-  background: #ffffff;
+  width: 100%;
+  max-width: 1024px;
+  margin: 16px auto;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.06);
+  padding: 16px;
+}
+
+.muted { color: var(--muted); }
+
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.row.gap { gap: 10px; }
+.spacer { flex: 1; }
+
+.label-inline { min-width: 140px; }
+
+input[type="date"], select {
+  padding: 8px 10px;
+  border: 1px solid var(--secondary);
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin: 1rem;
-  width: 90%;
-  max-width: 800px;
+  background: #fff;
 }
+input[type="date"]:focus, select:focus { outline: none; box-shadow: 0 0 0 4px var(--ring); }
 
-label {
-  margin-right: 0.5rem;
-}
-
-select {
-  padding: 0.3rem;
-  font-size: 1rem;
-}
-
-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+.btn {
+  padding: 9px 14px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-left: 0.5rem;
+  font-weight: 600;
 }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-secondary { background: var(--secondary); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.action-btn {
-  background-color: #0070f3;
-  color: #fff;
-}
+.admin-form { display: grid; grid-template-columns: auto auto 1fr auto; gap: 8px; align-items: center; margin: 10px 0; }
 
-.action-btn:hover {
-  background-color: #005bb5;
-}
+.guardia-list { list-style: none; padding: 0; margin: 10px 0; }
+.guardia-list li { padding: 8px 10px; border: 1px solid var(--secondary); border-radius: 8px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.guardia-list .chip { background: var(--secondary); padding: 4px 8px; border-radius: 6px; }
+.guardia-list button { margin-left: auto; }
 
-.action-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+.table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+.table th, .table td { text-align: left; padding: 10px; border-bottom: 1px solid var(--secondary); }
+.table tbody tr.conflict { background: var(--danger); }
+.table tbody tr.conflict td { border-bottom-color: var(--danger-border); }
 
-.secondary {
-  background-color: #e2e8f0;
-  color: #333;
-}
+.status { color: var(--primary); font-style: italic; margin: 6px 0 4px; }
 
-.secondary:hover {
-  background-color: #cbd5e1;
-}
+.stats { margin: 4px 0 8px; }
 
-.button-row {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
+.calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.calendar .day {
+  background: #fff; border: 1px solid var(--secondary); border-radius: 8px; padding: 8px; min-height: 84px;
+  display: flex; flex-direction: column; gap: 4px;
 }
-
-.instructions {
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  color: #555;
-}
-
-#shift-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-#shift-table th,
-#shift-table td {
-  padding: 0.5rem;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-#shift-table th {
-  background-color: #f1f5f9;
-}
-
-/* Highlight rows with conflicts in a light red background */
-.conflict {
-  background-color: #fde2e2;
-}
-
-.assigned-col {
-  width: 35%;
-}
-
-.remaining {
-  margin-top: 0.5rem;
-  font-weight: bold;
-}
-
-/* Status message displayed when selections are saved or conflicts resolved */
-.status {
-  margin-top: 0.3rem;
-  font-size: 0.85rem;
-  color: #0070f3;
-  font-style: italic;
-}
-
-/* Admin form styling */
-.admin-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.guardia-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.guardia-list li {
-  padding: 0.3rem 0.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  font-size: 0.9rem;
-}
-
-/* Calendar styling */
-#calendar-container {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.calendar-month {
-  margin-bottom: 2rem;
-}
-
-.calendar-month h3 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-}
-
-.calendar-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.calendar-table th,
-.calendar-table td {
-  border: 1px solid #e2e8f0;
-  padding: 0.4rem;
-  vertical-align: top;
-  min-width: 100px;
-  height: 90px;
-  font-size: 0.75rem;
-}
-
-.calendar-table th {
-  background-color: #f1f5f9;
-  text-align: center;
-  font-weight: bold;
-}
-
-.calendar-cell-date {
-  font-weight: bold;
-  margin-bottom: 0.2rem;
-}
-
-/* Highlight Monday and Friday cells */
-.mon-cell {
-  background-color: #fef8e7;
-}
-.fri-cell {
-  background-color: #fef8e7;
-}
-
-/* Style shift entries in calendar */
-.shift-entry {
-  display: block;
-  margin: 0.1rem 0;
-  padding: 0.1rem 0.2rem;
-  border-radius: 4px;
-}
-.shift-puerta {
-  background-color: #edf2ff;
-}
-.shift-trauma {
-  background-color: #ffeef8;
-}
+.calendar .day .date { font-weight: 700; font-size: 12px; color: var(--muted); }
+.calendar .day.mon, .calendar .day.fri { background: #f9fafb; }
+.calendar .badge { font-size: 11px; padding: 3px 6px; border-radius: 6px; background: var(--secondary); }
+.calendar .badge.puerta { background: #e0ecff; }
+.calendar .badge.traumato { background: #ffe4e6; }
