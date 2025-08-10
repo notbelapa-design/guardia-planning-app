@@ -12,7 +12,7 @@
   // ---------- Config ----------
   const STATE_KEY = "guardiaPlanner.v2";
   const DEFAULT_RESIDENTS = ["Resident 1", "Resident 2", "Resident 3", "Resident 4"];
-  const DEFAULT_TYPES = ["Puerta", "Traumato"];
+  const DEFAULT_TYPES = ["Puerta", "Observa", "Traumato"];
   const DEFAULT_SLOTS_PER_RESIDENT = 4;
   const FAIRNESS = { monFriWeight: 1 }; // change if you want Friday/Monday to count more/less
 
@@ -280,7 +280,12 @@
       // add shifts badges
       for (const s of state.shifts.filter(s => s.date === iso)) {
         const b = document.createElement("div");
-        b.className = "badge " + (s.type.toLowerCase() === "puerta" ? "puerta" : "traumato");
+        let cls;
+        const t = s.type.toLowerCase();
+        if (t === "puerta") cls = "puerta";
+        else if (t === "traumato") cls = "traumato";
+        else cls = "observa";
+        b.className = "badge " + cls;
         // assigned is recomputed in renderPlanning; ensure fallback:
         const assignedNames = (s.assigned && s.assigned.length ? s.assigned : whoIsAssigned(s.id)).join(", ") || "—";
         b.textContent = `${s.type}: ${assignedNames}`;
